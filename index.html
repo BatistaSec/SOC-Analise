@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Joao Batista | Cloud Security</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+    body {
+      background: radial-gradient(circle at top, #0f172a, #000);
+      color: #e5e7eb;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* SCROLL BAR */
+    #progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 4px;
+      background: #22d3ee;
+      width: 0;
+      z-index: 999;
+    }
+
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      animation: fadeDown 1.2s ease;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      text-shadow: 0 0 20px rgba(34,211,238,0.3);
+    }
+    header h1 span { color: #22d3ee; }
+    header p {
+      max-width: 700px;
+      margin-top: 20px;
+      color: #94a3b8;
+    }
+
+    nav {
+      position: fixed;
+      top: 15px; right: 20px;
+      z-index: 998;
+    }
+    nav a {
+      color: #22d3ee;
+      margin-left: 15px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .btns { margin-top: 30px; }
+    .btns a {
+      padding: 12px 28px;
+      border-radius: 25px;
+      border: 1px solid #22d3ee;
+      color: #22d3ee;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: all .3s;
+    }
+    .btns a:hover {
+      background: #22d3ee;
+      color: #000;
+      box-shadow: 0 0 25px rgba(34,211,238,0.5);
+    }
+
+    section {
+      max-width: 1100px;
+      margin: auto;
+      padding: 100px 20px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+    section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      color: #22d3ee;
+      text-shadow: 0 0 15px rgba(34,211,238,0.3);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    .card {
+      background: #020617;
+      padding: 30px;
+      border-radius: 18px;
+      transition: transform .3s, box-shadow .3s;
+      position: relative;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      box-shadow: 0 0 30px rgba(34,211,238,0.15);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .card:hover::after { opacity: 1; }
+    .card:hover {
+      transform: translateY(-8px) scale(1.03);
+    }
+
+    .timeline {
+      border-left: 2px solid #22d3ee;
+      padding-left: 25px;
+    }
+    .timeline div { margin-bottom: 30px; }
+
+    footer {
+      background: #000;
+      text-align: center;
+      padding: 60px 20px;
+      color: #64748b;
+    }
+
+    /* PARTICLES */
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Badge TryHackMe */
+    .badge-tryhackme {
+      display: flex;
+      justify-content: center;
+      margin: 25px 0 10px 0;
+      animation: fadeDown 1.5s;
+    }
+    .badge-tryhackme iframe {
+      width: 320px;
+      height: 120px;
+      border-radius: 18px;
+      box-shadow: 0 0 40px #22d3ee, 0 0 10px #0ea5e9 inset;
+      border: none;
+      background: #0f172a;
+      transition: box-shadow .4s;
+    }
+    .badge-tryhackme:hover iframe {
+      box-shadow: 0 0 80px #22d3ee, 0 0 20px #0ea5e9 inset;
+    }
+
+    .card-3d {
+      width: 340px;
+      height: 140px;
+      margin: 40px auto 0 auto;
+      perspective: 900px;
+      border-radius: 22px;
+      box-shadow: 0 0 40px #22d3ee, 0 0 10px #0ea5e9 inset;
+      transition: box-shadow .4s;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-3d iframe {
+      width: 320px;
+      height: 120px;
+      border-radius: 18px;
+      border: none;
+      background: #0f172a;
+      box-shadow: none;
+    }
+    .card-3d:hover {
+      box-shadow: 0 0 80px #22d3ee, 0 0 20px #0ea5e9 inset;
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+<canvas id="particles"></canvas>
+
+<nav>
+  <a href="#about">Sobre</a>
+  <a href="#projects">Projetos</a>
+  <a href="#contact">Contato</a>
+</nav>
+
+<header>
+  <h1>Joao Batista <span>Cloud Security</span></h1>
+  <!-- Badge TryHackMe com efeito -->
+  <div class="badge-tryhackme">
+    <iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=5416826"></iframe>
+  </div>
+  <p>Estudante de Ciência da Computação focado exclusivamente em segurança de ambientes em nuvem, arquitetura segura e monitoramento de ameaças.</p>
+  <div class="btns">
+    <a href="#projects">Projetos</a>
+    <a href="#contact">Contato</a>
+  </div>
+</header>
+
+<section id="about">
+  <h2>Sobre mim</h2>
+  <p>Atuo com foco total em Cloud Security, estudando arquitetura segura, controle de identidades, monitoramento, resposta a incidentes e boas práticas para ambientes AWS. Busco estágio e projetos voltados exclusivamente à segurança em nuvem.</p>
+</section>
+
+<section>
+  <h2>Especialidades em Cloud Security</h2>
+  <div class="cards">
+    <div class="card"><h3>AWS Security</h3><p>IAM, VPC, Security Groups, CloudTrail, GuardDuty.</p></div>
+    <div class="card"><h3>Defensive Cloud</h3><p>Monitoramento, logs, detecção e resposta.</p></div>
+    <div class="card"><h3>Automação</h3><p>Python, Bash e scripts para segurança cloud.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Linha de Evolução</h2>
+  <div class="timeline">
+    <div><strong>Fundamentos</strong><br>Linux, redes, segurança da informação.</div>
+    <div><strong>Cloud Security</strong><br>AWS, IAM, monitoramento e arquitetura segura.</div>
+    <div><strong>Projetos Avançados</strong><br>TCC, detecção de ataques e automação.</div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>Projetos em Cloud Security</h2>
+  <div class="cards">
+    <div class="card"><h3>Plataforma de Detecção de Ataques em AWS</h3><p>Coleta de logs (CloudTrail + VPC Flow Logs), análise e alertas.</p><small>IAM • GuardDuty • Lambda • CloudWatch</small></div>
+    <div class="card"><h3>Arquitetura Cloud Segura</h3><p>Modelo de referência com foco em segurança e compliance.</p><small>VPC • Security Groups • IAM Policies</small></div>
+  </div>
+</section>
+
+<section>
+  <h2>Certificações & Estudos</h2>
+  <div class="cards">
+    <div class="card">AWS Cloud Practitioner (em andamento)</div>
+    <div class="card">AWS Security Essentials</div>
+    <div class="card">TryHackMe – Cloud Security</div>
+  </div>
+</section>
+
+<footer id="contact">
+  <h3>Contato</h3>
+  <p>GitHub • LinkedIn • Email</p>
+  <p style="margin-top:20px;">© 2026 Diego • Cloud Security Portfolio</p>
+</footer>
+
+<script>
+  /* SCROLL PROGRESS */
+  window.addEventListener('scroll', () => {
+    const scroll = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('progress').style.width = (scroll / height) * 100 + '%';
+  });
+
+  /* SECTION ANIMATION */
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('show'));
+  }, { threshold: 0.2 });
+  sections.forEach(sec => observer.observe(sec));
+
+  /* PARTICLES */
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  const dots = Array.from({length: 80}, () => ({ x: Math.random()*w, y: Math.random()*h, vx: Math.random()-0.5, vy: Math.random()-0.5 }));
+  function draw(){ ctx.clearRect(0,0,w,h); dots.forEach(d => { d.x+=d.vx; d.y+=d.vy; if(d.x<0||d.x>w) d.vx*=-1; if(d.y<0||d.y>h) d.vy*=-1; ctx.fillStyle='#22d3ee'; ctx.fillRect(d.x,d.y,2,2); }); requestAnimationFrame(draw);} draw();
+
+  // Card 3D efeito mouse
+  const card = document.getElementById('card3d');
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width/2;
+    const centerY = rect.height/2;
+    const rotateX = ((y - centerY) / centerY) * 12;
+    const rotateY = ((x - centerX) / centerX) * -12;
+    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.04)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+  });
+</script>
+
+</body>
+</html>
