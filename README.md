@@ -1,6 +1,6 @@
 # SOC Monitor - Visual
 
-Ferramenta visual em Python para análise e monitoramento de segurança de redes e aplicações web, simulando operações de um SOC (Security Operations Center).
+Ferramenta visual em Python para análise e monitoramento de segurança de redes e aplicações web, simulando operações de um SOC (Security Operations Center) Simples.
 
 ## Funcionalidades
 
