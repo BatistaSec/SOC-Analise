@@ -14,4 +14,4 @@ Ferramenta visual em Python para análise e monitoramento de segurança de redes
 
 1. Instale as dependências:
    ```bash
-   pip install requests pillow
+   pip install 
